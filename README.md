@@ -24,4 +24,11 @@ Have a table of the pokemon types as well, provide a select pulldown to set some
 ** pID should correspond to number in pokedex...
 * user      - userID int primary key not auto increment, userName text;
 * poketypes - pTypeID int primary key auto increment, pTypeName text, (Battle Data - effective against...) 
+* 
+
+## Technologies?
+* Thinking of using node/express/sass
+** sqlite module?
+* Firebase? might be interesting use case if I can figure out how to use it :-)
+** Would love to have data bound directly into the db so I didn't have to do all that work
 * userData  - userID int primary key auto increment, pID int, pCount int, cCount int
