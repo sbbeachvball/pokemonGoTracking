@@ -3,8 +3,25 @@
 // this simple script generates some data that will then be manually fine tuned and 
 // ulitmately end up in a db.  Most cases ended up getting handled here, but has
 // not been completely vetted at this point.
-$f = 'pokemonBaseIndex.txt';
-$lines = file($f);
+
+// Input file is expected to be a CSV with 3 records:
+//   Pokedex Index #, Evolution Level of that Pokemon, Pokemon Name.
+// We expect that evolved pokemon directly follow the base pokemon entry.
+// Most fit a very specific pattern other than the eevee evolves which have 
+// three evLevel = 1 entries after the base pokemon (eevee).
+
+// filename is hardwired to the 
+define("POKEDEX_BASE_FILE",'../data/pokemonBaseIndex.csv');
+define("POKEDEX_DB",'../data/pokemon.sqlite');
+//$f = '../data/pokemonBaseIndex.csv';
+
+if( ! file_exists( POKEDEX_BASE_FILE ) ){
+    print "Filename " . POKEDEX_BASE_FILE . " is hardwired into code which is expected to be run from the utils directory\n";
+    exit(1);
+}
+
+function print_pre(){
+}
 class pokemon {
     function specialCandy($indexes,$candies){
         $this->specialIndexes[] = $indexes;
@@ -19,6 +36,7 @@ class pokemon {
         $this->evCandy = 0;
         $this->specialIndexes = array();
         $this->specialCandies = array();
+        $this->dbData = array();
     }
     function calcCandy($numEvs){
         // special cases that describe a set of base poke indexes and their candy requirements
@@ -60,10 +78,31 @@ class pokemon {
             $this->evCandy = $candyIndex[$whichEv];
         }
     }
+    function dbPrep(){
+        $this->dbData[':pdex'] = $this->index;
+        $this->dbData[':name'] = $this->name;
+        $this->dbData[':evBase'] = $this->evBase;
+        $this->dbData[':evFrom'] = $this->evFrom;
+        $this->dbData[':evLevel'] = $this->evLevel;
+        $this->dbData[':evCandy'] = $this->evCandy;
+        return $this->dbData;
+    }
     function output(){
-        return $this->index . ' ' . $this->name . ' ' . $this->evBase . ' ' . $this->evFrom . ' ' . $this->evLevel . ' ' . $this->evCandy;
+        $sep = ',';
+        return $this->index . $sep . $this->name . $sep . $this->evBase . $sep . $this->evFrom . $sep . $this->evLevel . $sep . $this->evCandy;
     }
 }
+
+
+$lines = file(POKEDEX_BASE_FILE);
+
+$dsn = "sqlite:".POKEDEX_DB;
+try {
+    $dbh = new PDO($dsn);
+} catch (PDOException $e) {
+    echo 'Connection failed: ' . $e->getMessage();
+}
+
 $allPokemon = array();
 $evNumTracking = array();
 foreach($lines as $line){
@@ -77,7 +116,33 @@ foreach($lines as $line){
     $allPokemon[] = $p;
 }
 
+// create database and some data
+$res = $dbh->query("drop table if exists pokemon;");
+$res = $dbh->query("create table if not exists pokemon (pdex int primary key not null, name text, evBase int, evFrom int, evLevel int, evCandy int);");
+
+// users
+$res = $dbh->query("drop table if exists user;");
+$res = $dbh->query("create table if not exists user (user int primary key not null, username text);");
+$res = $dbh->query("insert into user (user, username) VALUES (1,'aaron');");
+$res = $dbh->query("insert into user (user, username) VALUES (2,'malia');");
+
+// userData
+// hmmmm, need to track whether a user has a specific evolution to make calculations
+$res = $dbh->query("drop table if exists userData;");  // will want to comment this out once in use
+$res = $dbh->query("create table if not exists userData (rowid integer primary key autoincrement, userId int, userPdex int, userCandy int);");
+//print_r($res);
+
+// build pokedex based data
+$ins = $dbh->prepare("insert into pokemon ( pdex,name,evBase,evFrom,evLevel,evCandy) VALUES (:pdex,:name,:evBase,:evFrom,:evLevel,:evCandy);");
 foreach( $allPokemon as &$p){
     $p->calcCandy($evNumTracking[$p->evBase]);
-    print $p->output() . "\n";
+    if (! $ins->execute($p->dbPrep())){
+        print "Error on inserting into db\n";
+    }
 }
+
+// Set up some initial fake userdata
+foreach( $allPokemon as &$p){
+    $res = $dbh->query("insert into userData (userId,userPdex,userCandy) VALUES (1,". $p->index . ",2);");
+}
+

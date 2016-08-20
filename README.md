@@ -4,7 +4,9 @@ I like to accumulate my evolutions and then do an "evolve party", using a luck e
 doing all of them at once.  
 
 Currently tracking evolves in a google docs sheet.  Sort by number of evolves and then 
-print out before going on the "evolve party".
+print out before going on the "evolve party".  Am hoping to build up something a bit 
+easier to use.  Will still have to manually set pokemon candies, but hoping to do that
+with some clever jQuery/javaScript calls.
 
 Thinking it could be cool to have a database with a table of the pokemon and attributes.
 Provide some html to add pokemon to db as we find them.
