@@ -1,7 +1,8 @@
 #!/usr/bin/env php
 <?php
 // this simple script generates some data that will then be manually fine tuned and 
-// ulitmately end up in a db.
+// ulitmately end up in a db.  Most cases ended up getting handled here, but has
+// not been completely vetted at this point.
 $f = 'pokemonBaseIndex.txt';
 $lines = file($f);
 class pokemon {
