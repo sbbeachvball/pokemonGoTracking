@@ -1,5 +1,19 @@
 extends layout
-
+- console.log('Hey There');
 block content
   h1= title
-  p Welcome to #{title}
+
+  each chunk in tableChunks
+    div.tableContainer
+      table
+        thead
+          td.tableHeader #
+          td.tableHeader Count
+          td.tableHeader Pokemon
+        tbody
+          each row in chunk
+            tr(id="pokemon-#{row.userPdex}",class="tablerow") 
+              td.num #{row.userPdex} 
+              td.count #{row.userCount} 
+              td.pokemon #{row.userPname} 
+      

@@ -11,8 +11,9 @@
 // three evLevel = 1 entries after the base pokemon (eevee).
 
 // filename is hardwired to the 
-define("POKEDEX_BASE_FILE",'../data/pokemonBaseIndex.csv');
-define("POKEDEX_DB",'../data/pokemon.sqlite');
+define('POKEDEX_BASE_FILE','../data/pokemonBaseIndex.csv');
+define('POKEDEX_DB','../data/pokemon.sqlite');
+define('INIT_TABLES',true);
 //$f = '../data/pokemonBaseIndex.csv';
 
 if( ! file_exists( POKEDEX_BASE_FILE ) ){
@@ -121,15 +122,18 @@ $res = $dbh->query("drop table if exists pokemon;");
 $res = $dbh->query("create table if not exists pokemon (pdex int primary key not null, name text, evBase int, evFrom int, evLevel int, evCandy int);");
 
 // users
-$res = $dbh->query("drop table if exists user;");
+if ( INIT_TABLES )  $res = $dbh->query("drop table if exists user;");
 $res = $dbh->query("create table if not exists user (user int primary key not null, username text);");
 $res = $dbh->query("insert into user (user, username) VALUES (1,'aaron');");
 $res = $dbh->query("insert into user (user, username) VALUES (2,'malia');");
 
 // userData
 // hmmmm, need to track whether a user has a specific evolution to make calculations
-$res = $dbh->query("drop table if exists userData;");  // will want to comment this out once in use
-$res = $dbh->query("create table if not exists userData (rowid integer primary key autoincrement, userId int, userPdex int, userCandy int);");
+if ( INIT_TABLES ) $res = $dbh->query("drop table if exists userCandy;");  // will want to comment this out once in use
+$res = $dbh->query("create table if not exists userCandy (rowid integer primary key autoincrement, userId int, userEvBase int, userEvCandy int);");
+
+if ( INIT_TABLES ) $res = $dbh->query("drop table if exists userHas;");  // will want to comment this out once in use
+$res = $dbh->query("create table if not exists userHas (rowid integer primary key autoincrement, userId int, userPdex int, userCount int);");
 //print_r($res);
 
 // build pokedex based data
@@ -143,6 +147,14 @@ foreach( $allPokemon as &$p){
 
 // Set up some initial fake userdata
 foreach( $allPokemon as &$p){
-    $res = $dbh->query("insert into userData (userId,userPdex,userCandy) VALUES (1,". $p->index . ",2);");
+    $candyCount = rand(1,40);
+    $userHas = rand(0,4);
+    $res = $dbh->query("insert into userCandy (userId,userEvBase,userEvCandy) VALUES (1,". $p->index . ",$candyCount);");
+    $res = $dbh->query("insert into userHas (userId,userPdex,userCount) VALUES (1,". $p->index . ",$userHas);");
 }
 
+// this query is close to getting the data I need from the db...
+// could do some joins on the data as well.... to get the ev1 and ev2 data???
+//  select pdex,name from pokemon where pdex in ( select evBase from pokemon group by evBase );
+// select p.pdex,p.name,ev1.name from pokemon as p left join pokemon as ev1 on p.pdex = ev1.evBase and ev1.evLevel = 1 where p.pdex in ( select evBase from pokemon group by evBase );
+// select p.pdex,p.name,ev1.name,ev2.name from pokemon as p left join pokemon as ev1 on p.pdex = ev1.evBase and ev1.evLevel = 1 left join pokemon as ev2 on p.pdex = ev2.evBase and ev2.evLevel = 2 where p.pdex in ( select evBase from pokemon group by evBase );
