@@ -1,0 +1,37 @@
+table {
+    border: 1px solid blue;
+    border-collapse: collapse;
+}
+
+td {
+    border: 1px solid blue;
+        background-color: #eee;
+}
+
+.tableHeader {
+    font-weight: bold;
+    text-align: center;
+}
+
+.pokemon {
+    text-align: center;
+    padding-right: 3px;
+    padding-left: 3px;
+}
+.count {
+    text-align: right;
+    padding-right: 3px;
+}
+.num {
+    text-align: right;
+    padding-right: 3px;
+}
+.tableContainer {
+    display: inline-block;
+    vertical-align: top;
+    padding: 10px;
+    margin: 10px;
+    border: 2px solid black;
+    border-radius: 8px;
+    background-color: #aaa;
+}
