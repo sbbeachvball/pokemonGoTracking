@@ -1,0 +1,24 @@
+extends layout
+block content
+  h1= title
+  a(href="../..") to parent page
+  br
+  each chunk in tableChunks
+    div.tableContainer
+      table
+        thead
+          td.tableHeader #
+          td.tableHeader Count
+          td.tableHeader Pokemon
+        tbody
+          each row in chunk
+            tr(id="pokemon-#{row.userPdex}",class="tablerow") 
+              td.num #{row.userPdex} 
+              td.count 
+                button(type="button",onClick='alterCandy(#{row.userId},#{row.userPdex},\'count-userid-#{row.userId}-pdex-#{row.userPdex}\',-10)').inline.decrement -10
+                button(type="button",onClick='alterCandy(#{row.userId},#{row.userPdex},\'count-userid-#{row.userId}-pdex-#{row.userPdex}\',-1)').inline.decrement -1
+                div.inline.candyValue(id='count-userid-#{row.userId}-pdex-#{row.userPdex}') #{row.userCount}
+                button(type="button",onClick='alterCandy(#{row.userId},#{row.userPdex},\'count-userid-#{row.userId}-pdex-#{row.userPdex}\',1)').inline.increment +1
+                button(type="button",onClick='alterCandy(#{row.userId},#{row.userPdex},\'count-userid-#{row.userId}-pdex-#{row.userPdex}\',10)').inline.increment +10
+              td.pokemon #{row.userPname} 
+ 

@@ -7,6 +7,10 @@ var bodyParser = require('body-parser');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
+var counts = require('./routes/pokemonCounts');
+var candy = require('./routes/pokemonCandy');
+var dbCountSet = require('./routes/apiDbCountSet');
+var dbCandySet = require('./routes/apiDbCandySet');
 
 var app = express();
 
@@ -24,6 +28,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
 app.use('/users', users);
+app.use('/counts', counts);
+app.use('/candy', candy);
+app.use('/api/db/count/set', dbCountSet);
+app.use('/api/db/candy/set', dbCandySet);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -1,19 +1,19 @@
 extends layout
-- console.log('Hey There');
 block content
   h1= title
 
-  each chunk in tableChunks
-    div.tableContainer
-      table
-        thead
-          td.tableHeader #
-          td.tableHeader Count
-          td.tableHeader Pokemon
-        tbody
-          each row in chunk
-            tr(id="pokemon-#{row.userPdex}",class="tablerow") 
-              td.num #{row.userPdex} 
-              td.count #{row.userCount} 
-              td.pokemon #{row.userPname} 
-      
+  p. 
+    OK, we are here at the main page.  The counts and candy links allow the user to adjust the numbers
+    in the db.
+  p.
+    The evolve reports still need to be created.  Need to sort out the 
+    logic for maximizing XP (# of evolves) or maximizing CP (getting higher evolved pokemon).
+  p.
+    This should be modified to actually loop over the users
+  ul
+    li Aaron - #[a(href="counts/1") Pokemon Counts] | 
+      #[a(href="candy/1") Pokemon Candy] | 
+      #[a(href="evolve/1") Evolve Report] 
+    li Malia - #[a(href="counts/2") Pokemon Counts] | 
+      #[a(href="candy/2") Pokemon Candy] | 
+      #[a(href="evolve/2") Evolve Report]

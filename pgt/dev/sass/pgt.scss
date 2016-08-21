@@ -1,3 +1,5 @@
+$control_size : 100%;
+$control_padding : 5px;
 table {
     border: 1px solid blue;
     border-collapse: collapse;
@@ -34,4 +36,43 @@ td {
     border: 2px solid black;
     border-radius: 8px;
     background-color: #aaa;
+}
+.decrement {
+    padding-left: $control_padding;
+    padding-right: $control_padding;
+    font-weight: bold;
+    font-size: $control_size;
+    background-color: red;
+}
+.increment {
+    font-weight: bold;
+    background-color: green;
+    font-size: $control_size;
+    padding-left: $control_padding;
+    padding-right: $control_padding;
+}
+.inline {
+    display: inline-block;
+}
+.candyValue {
+    font-weight: bold;
+    font-size: 100%;
+    padding-left: $control_padding;
+    padding-right: $control_padding;
+    width: 30px;
+    text-align: center;
+}
+.countValue {
+    font-weight: bold;
+    font-size: 100%;
+    padding-left: $control_padding;
+    padding-right: $control_padding;
+    width: 20px;
+    text-align: center;
+}
+button {
+    border: 1px solid #444;
+    border-radius: 4px;
+    padding: 1px;
+    margin: 1px;
 }
