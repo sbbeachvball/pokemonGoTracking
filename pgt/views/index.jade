@@ -10,10 +10,12 @@ block content
     logic for maximizing XP (# of evolves) or maximizing CP (getting higher evolved pokemon).
   p.
     This should be modified to actually loop over the users
-  ul
-    li Aaron - #[a(href="counts/1") Pokemon Counts] | 
-      #[a(href="candy/1") Pokemon Candy] | 
-      #[a(href="evolve/1") Evolve Report] 
-    li Malia - #[a(href="counts/2") Pokemon Counts] | 
-      #[a(href="candy/2") Pokemon Candy] | 
-      #[a(href="evolve/2") Evolve Report]
+  ul                                                                
+    each row in rows
+      li #{row.fullname} (#{row.uid}) - #{row.username} 
+        ul
+          li #[a(href="counts/#{row.uid}") Pokemon Counts]
+          li #[a(href="candy/#{row.uid}") Pokemon Candy]
+          li #[a(href="evolve/#{row.uid}") Pokemon Evolve Report]
+          //li #[a(href="evolve_cp/#{row.uid}") Pokemon Evolve Report (maximize CP)]
+  

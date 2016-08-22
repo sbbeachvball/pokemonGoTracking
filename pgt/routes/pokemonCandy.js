@@ -11,16 +11,16 @@ router.get('/:userId', function(req, res, next) {
     query += 'where userId = ? and pdex in ( select evBase from pokemon group by evBase ) order by userPname';
     try {
         db.all(query,[ userId ], function(err,rows) {
-        // need to break the table into chunks
-        var tableChunks = [];
-        var len = rows.length;
-        var pertable = 27;
-        var i = 0;
-        for (i=0; i < len; i+=pertable){
-            tableChunks.push(rows.slice(i,i+pertable));
-        }
-        res.render('pokemonCandy', { title: 'Pokemon GO Evolve Tracking - Pokemon Candy', tableChunks: tableChunks, rows: rows });
-    });
+            // need to break the table into chunks
+            var tableChunks = [];
+            var len = rows.length;
+            var pertable = 20;
+            var i = 0;
+            for (i=0; i < len; i+=pertable){
+                tableChunks.push(rows.slice(i,i+pertable));
+            }
+            res.render('pokemonCandy', { title: 'Pokemon GO Evolve Tracking - Pokemon Candy', tableChunks: tableChunks, rows: rows });
+        });
     } catch(exception) {
         console.log("Error with DB, need to reload page");
     }

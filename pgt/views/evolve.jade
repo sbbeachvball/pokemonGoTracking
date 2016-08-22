@@ -1,0 +1,11 @@
+extends layout
+block content
+  h1= title
+  a(href="../..") to parent page
+  
+  br
+  each d in data.pData
+    div.inline.evolveReport. 
+      #{d.pokemonEvolvesStr2}
+      <br />
+      Candies: #{d.candies}

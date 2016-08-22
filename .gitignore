@@ -2,6 +2,10 @@
 *~
 **/*~
 
+# The gulp generated file
+pgt/public/javascripts/*.js
+pgt/public/stylesheets/*.css
+
 # Logs
 logs
 *.log

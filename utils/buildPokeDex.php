@@ -13,7 +13,7 @@
 // filename is hardwired to the 
 define('POKEDEX_BASE_FILE','../data/pokemonBaseIndex.csv');
 define('POKEDEX_DB','../data/pokemon.sqlite');
-define('INIT_TABLES',true);
+define('INIT_TABLES',false);
 //$f = '../data/pokemonBaseIndex.csv';
 
 if( ! file_exists( POKEDEX_BASE_FILE ) ){
@@ -118,7 +118,7 @@ foreach($lines as $line){
 }
 
 // create database and some data
-$res = $dbh->query("drop table if exists pokemon;");
+if ( false ) $res = $dbh->query("drop table if exists pokemon;");
 $res = $dbh->query("create table if not exists pokemon (pdex int primary key not null, name text, evBase int, evFrom int, evLevel int, evCandy int);");
 
 // users
@@ -149,6 +149,8 @@ foreach( $allPokemon as &$p){
 foreach( $allPokemon as &$p){
     $candyCount = rand(1,40);
     $userHas = rand(0,4);
+    // this first command should have skipped non evBase ids - clean up that issue with the following line
+    // delete from userCandy where userEvBase not in ( select distinct(evBase) from pokemon);
     $res = $dbh->query("insert into userCandy (userId,userEvBase,userEvCandy) VALUES (1,". $p->index . ",$candyCount);");
     $res = $dbh->query("insert into userHas (userId,userPdex,userCount) VALUES (1,". $p->index . ",$userHas);");
 }
