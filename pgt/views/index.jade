@@ -12,7 +12,7 @@ block content
     This should be modified to actually loop over the users
   ul                                                                
     each row in rows
-      li #{row.fullname} (#{row.uid}) - #{row.username} 
+      li #{row.username} (#{row.uid})
         ul
           li #[a(href="counts/#{row.uid}") Pokemon Counts]
           li #[a(href="candy/#{row.uid}") Pokemon Candy]
