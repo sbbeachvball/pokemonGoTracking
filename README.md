@@ -38,6 +38,8 @@ Have a table of the pokemon types as well, provide a select pulldown to set some
 * jQuery
 
 ## Getting Started
+You will need a working nodejs install.  Visit <http://nodejs.org> for more information on installing Node.  
+Once node is installed the following should get things going :-)
 ```bash
 git clone https://github.com/sbbeachvball/pokemonGoTracking.git
 cd pokemonGoTracking/run
