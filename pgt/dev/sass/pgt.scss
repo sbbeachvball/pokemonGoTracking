@@ -75,11 +75,19 @@ td {
     margin: 5px;
     border: 1px solid #444;
     border-radius: 6px;
-    background-color: #cdf;
 }
 button {
     border: 1px solid #444;
     border-radius: 4px;
     padding: 1px;
     margin: 1px;
+}
+.single-evolve {
+    background-color: #dfc;
+}
+.double-evolve {
+    background-color: #cdf;
+}
+.error-evolve {
+    background-color: red;
 }

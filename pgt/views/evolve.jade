@@ -5,7 +5,7 @@ block content
   
   br
   each d in data.pData
-    div.inline.evolveReport. 
+    div.inline.evolveReport(class="#{d.class}").
       #{d.pokemonEvolvesStr2}
       <br />
       Candies: #{d.candies}

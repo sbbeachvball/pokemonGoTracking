@@ -16,11 +16,16 @@ function evolveCrunch(d){
         n.candies = d.userCandy[i].userEvCandy;
         n.pokemonEvolves = [];
         n.pokemonEvolvesStr2 = '';
+        n.class = '';
+        n.maxEvLevel = 0;
         var evolveAnOption = false;
         for(var j=0; j < d.pokemon.length; j++){
             // check if this pokemon is in the right evolve chain
             if( d.pokemon[j].evBase == d.userCandy[i].userEvBase ){
                 n.pokemonEvolves.push(d.pokemon[j].name);
+                
+                // get max evolution level (that should probably have been done in db
+                if( d.pokemon[j].evLevel > n.maxEvLevel) { n.maxEvLevel = d.pokemon[j].evLevel; }
                 
                 // this conditional builds the evolve string (end version)
                 if(d.pokemon[j].evCandy == 0){
@@ -41,12 +46,20 @@ function evolveCrunch(d){
         }
         if ( ! evolveAnOption ) { valid = false; }
         
-        ///// the string is no longer used, but we still need this conditional as a check
-        ///if ( n.pokemonEvolves.length > 1){
-        ///    n.pokemonEvolvesStr = n.pokemonEvolves.join(" -> ");
-        ///}
-        ///else { valid = false; }
-        
+        /// the string is no longer used, but we still need this conditional as a check
+        if ( n.maxEvLevel == 0){
+            valid = false;
+        }
+        else if( n.maxEvLevel == 1){
+            n.class = 'single-evolve';
+        }
+        else if( n.maxEvLevel == 2){
+            n.class = 'double-evolve';
+        }
+        else {
+            n.class = 'error-evolve';
+        }
+         
         if ( n.candies == 0 ){ valid = false; }
         
         // only push this onto the array if we are still valid
