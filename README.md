@@ -40,11 +40,12 @@ Have a table of the pokemon types as well, provide a select pulldown to set some
 ## Getting Started
 Clone repo into a directory:
 ```bash
-  git clone https://github.com/sbbeachvball/pokemonGoTracking.git
-  cd pokemonGoTracking/run
-  make db
-  cd ../pgt
-  npm install -g gulp nodemon
-  npm install
-  gulp    # control-C once it finishes it's initial pass
-  npm start```
+git clone https://github.com/sbbeachvball/pokemonGoTracking.git
+cd pokemonGoTracking/run
+make db
+cd ../pgt
+npm install -g gulp nodemon
+npm install
+gulp    # control-C once it finishes it's initial pass
+npm start
+```
