@@ -29,25 +29,23 @@ Have a table of the pokemon types as well, provide a select pulldown to set some
 
 
 ## Technologies?
-* Thinking of using node/express/sass
-    * sqlite3 module?
+* git, node, express, sass, gulp, nodemon, sqlite3
 * Firebase? might be interesting use case if I can figure out how to use it :-)
     * Would love to have data bound directly into the db so I didn't have to do all that work
-* userData  - userID int primary key auto increment, pID int, pCount int, cCount int
-* gulp
-* jQuery
 
 ## Getting Started
 You will need a working nodejs install.  Visit <http://nodejs.org> for more information on installing Node.  
+You will also need a working git install.  Mac users may get prompted to install Xcode utils when first using git.
 Once node is installed the following should get things going :-)
 ```bash
+# navigate to a location on your system to clone the source repo into
 git clone https://github.com/sbbeachvball/pokemonGoTracking.git
 cd pokemonGoTracking/run
 make db
 cd ../pgt
-npm install -g gulp nodemon
-npm install
-gulp    # control-C once it finishes it's initial pass
+sudo npm install -g gulp nodemon   # mac users may need to add sudo to this command
+npm install   # install local node packages
+gulp    # do initial pass with the gulp task runner.  control-C once it finishes it's initial pass
 npm start
 ```
 
