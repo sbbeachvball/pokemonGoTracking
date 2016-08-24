@@ -121,9 +121,9 @@ $res = $dbh->query("create table if not exists pokemon (pdex int primary key not
 
 // users
 if ( INIT_TABLES )  $res = $dbh->query("drop table if exists user;");
-$res = $dbh->query("create table if not exists user (user int primary key not null, username text);");
-$res = $dbh->query("insert into user (user, username) VALUES (1,'aaron');");
-$res = $dbh->query("insert into user (user, username) VALUES (2,'malia');");
+$res = $dbh->query("create table if not exists user (uid int primary key not null, username text);");
+//$res = $dbh->query("insert into user (user, username) VALUES (1,'aaron');");
+//$res = $dbh->query("insert into user (user, username) VALUES (2,'malia');");
 
 // userData
 // hmmmm, need to track whether a user has a specific evolution to make calculations

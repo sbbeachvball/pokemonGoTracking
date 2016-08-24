@@ -23,9 +23,12 @@ router.get('/', function(req, res, next) {
         // 
         try {
             db.all('select uid from user order by uid desc limit 1',[], function(err,rows){
-                newuid = rows[0].uid + 1;
-                console.log("new user last row: "+rows[0].uid+', nextuid: '+newuid);
-                db.run('insert into user (uid,username,fullname) values (?,?,?)',[ newuid, newUser , newUser ]);
+                if ( rows === undefined || rows.length == 0 ) { newuid = 1; }
+                else { 
+                    newuid = rows[0].uid + 1;
+                }
+                console.log('nextuid: '+newuid);
+                db.run('insert into user (uid,username) values (?,?)',[ newuid, newUser ]);
                 try {
                     db.all('select pdex,evLevel from pokemon',[], function(err,rows){
                         console.log('results: '+rows.length);
@@ -40,7 +43,6 @@ router.get('/', function(req, res, next) {
                     });
                 } catch(exception) {
                 }
-                
             });
         } catch(exception) {
         }

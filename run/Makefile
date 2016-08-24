@@ -4,7 +4,7 @@ clean:
 	(cd ..; find . -type f -name '*~' -exec rm {} \;)
 	
 db:
-	(cd ../utils; ./buildPokeDex.php)
+	(cd ../utils; rm ../data/pokemon.sqlite; ./buildPokeDex.php)
 
 backup:
 	cp ../data/pokemon.sqlite ../backups/pokemon.sqlite-`date +'%Y%m%d'`
