@@ -12,6 +12,8 @@ var candy = require('./routes/pokemonCandy');
 var dbCountSet = require('./routes/apiDbCountSet');
 var dbCandySet = require('./routes/apiDbCandySet');
 var evolve = require('./routes/evolve');
+var newUser = require('./routes/newUser');
+var delUser = require('./routes/delUser');
 
 var app = express();
 
@@ -32,6 +34,8 @@ app.use('/users', users);
 app.use('/counts', counts);
 app.use('/candy', candy);
 app.use('/evolve', evolve);
+app.use('/newUser', newUser);
+app.use('/delUser', delUser);
 app.use('/api/db/count/set', dbCountSet);
 app.use('/api/db/candy/set', dbCandySet);
 

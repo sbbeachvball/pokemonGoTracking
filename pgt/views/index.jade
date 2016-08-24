@@ -17,5 +17,12 @@ block content
           li #[a(href="counts/#{row.uid}") Pokemon Counts]
           li #[a(href="candy/#{row.uid}") Pokemon Candy]
           li #[a(href="evolve/#{row.uid}") Pokemon Evolve Report]
+          li #[a(href="delUser/#{row.uid}") Delete User]
           //li #[a(href="evolve_cp/#{row.uid}") Pokemon Evolve Report (maximize CP)]
   
+
+  form(action="/newUser",method="get",enctype="multipart/form-data")
+    fieldset
+      label(for="newUser") New Username:
+      input(type="text",id="newUser",name="newUser",placeholder="Enter new user name")
+      input(type="submit",value="Create New User")
