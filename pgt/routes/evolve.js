@@ -8,6 +8,8 @@ var db = new sqlite3.Database('../data/pokemon.sqlite');
 ////////////////////////////////////////////////////////////////////////////////
 function evolveCrunch(d){
     d.pData = [];
+    d.singles = [];
+    d.doubles = [];
     d.attached = "Attached New Data";
     // loop over the user candy data
     for(var i=0; i < d.userCandy.length; i++){
@@ -45,6 +47,7 @@ function evolveCrunch(d){
             }
         }
         if ( ! evolveAnOption ) { valid = false; }
+        if ( n.candies == 0 ){ valid = false; }
         
         /// the string is no longer used, but we still need this conditional as a check
         if ( n.maxEvLevel == 0){
@@ -52,15 +55,16 @@ function evolveCrunch(d){
         }
         else if( n.maxEvLevel == 1){
             n.class = 'single-evolve';
+            if ( valid) { d.singles.push(n); }
         }
         else if( n.maxEvLevel == 2){
             n.class = 'double-evolve';
+            if ( valid) { d.doubles.push(n); }
         }
         else {
             n.class = 'error-evolve';
         }
          
-        if ( n.candies == 0 ){ valid = false; }
         
         // only push this onto the array if we are still valid
         if (valid) {
