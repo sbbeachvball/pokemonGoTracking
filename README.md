@@ -38,7 +38,6 @@ Have a table of the pokemon types as well, provide a select pulldown to set some
 * jQuery
 
 ## Getting Started
-Clone repo into a directory:
 ```bash
 git clone https://github.com/sbbeachvball/pokemonGoTracking.git
 cd pokemonGoTracking/run
