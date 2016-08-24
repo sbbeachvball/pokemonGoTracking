@@ -48,3 +48,5 @@ npm install
 gulp    # control-C once it finishes it's initial pass
 npm start
 ```
+
+Then navigate to [http://localhost:3000] in your favorite browser
