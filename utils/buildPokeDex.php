@@ -13,7 +13,7 @@
 // filename is hardwired to the 
 define('POKEDEX_BASE_FILE','../data/pokemonBaseIndex.csv');
 define('POKEDEX_DB','../data/pokemon.sqlite');
-define('INIT_TABLES',false);
+define('INIT_TABLES',true);
 //$f = '../data/pokemonBaseIndex.csv';
 
 if( ! file_exists( POKEDEX_BASE_FILE ) ){
@@ -143,19 +143,19 @@ foreach( $allPokemon as &$p){
     }
 }
 
-// Set up some initial fake userdata
-foreach( $allPokemon as &$p){
-    $userHas = rand(0,4);
-    // this first command should have skipped non evBase ids - clean up that issue with the following line
-    // delete from userCandy where userEvBase not in ( select distinct(evBase) from pokemon);
-    $res = $dbh->query("insert into userHas (userId,userPdex,userCount) VALUES (1,". $p->index . ",$userHas);");
-    
-    // this should NOT be done for every userCandy, this should only be done for entries that are evLevel 0
-    if ( $p->evLevel == 0 ){
-        $candyCount = rand(1,40);
-        $res = $dbh->query("insert into userCandy (userId,userEvBase,userEvCandy) VALUES (1,". $p->index . ",$candyCount);");
-    }
-}
+/////// Set up some initial fake userdata
+/////foreach( $allPokemon as &$p){
+/////    $userHas = rand(0,4);
+/////    // this first command should have skipped non evBase ids - clean up that issue with the following line
+/////    // delete from userCandy where userEvBase not in ( select distinct(evBase) from pokemon);
+/////    $res = $dbh->query("insert into userHas (userId,userPdex,userCount) VALUES (1,". $p->index . ",$userHas);");
+/////    
+/////    // this should NOT be done for every userCandy, this should only be done for entries that are evLevel 0
+/////    if ( $p->evLevel == 0 ){
+/////        $candyCount = rand(1,40);
+/////        $res = $dbh->query("insert into userCandy (userId,userEvBase,userEvCandy) VALUES (1,". $p->index . ",$candyCount);");
+/////    }
+/////}
 
 // this query is close to getting the data I need from the db...
 // could do some joins on the data as well.... to get the ev1 and ev2 data???
