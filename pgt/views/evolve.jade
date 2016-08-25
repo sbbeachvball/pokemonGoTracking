@@ -6,24 +6,16 @@ block content
   p.
     The blocks below are sorted by max evolutions AND number of candies.
     Color coding is as follows: green background represents single stage evolves that can just be done.
-    The blue background represents situations where double evolutions must be taken into account.
-    At some point, will try to express those better here, but for now just realize that they must
-    be considered more.
-  br
-  //each d in data.pData
-  //  div.inline.evolveReport(class="#{d.class}").
-  //    #{d.pokemonEvolvesStr2}
-  //    <br />
-  //    Candies: #{d.candies}
-  //
-  each d in data.singles
-    div.inline.evolveReport(class="#{d.class}").
-      #{d.pokemonEvolvesStr2}
-      <br />
-      Candies: #{d.candies}
+    The blue background represents situations where a double evolution can be completed.  
+    The pink means that the pokemon "family" has multiple evolutions, but that there is not yet
+    enough candy to do a double evolve.
+    The yellow/tan blocks represent upcoming single evolves that are getting close to being ready.
+  each group in data.gData
+    div.evolveGroup 
+      div.evolveGroupLabel #{group.desc} - (#{group.min} evolves worth #{group.cp} CP)
+      each d in group.data
+        div.inline.evolveReport(class="#{d.class}").
+          #{d.pokemonEvolvesStr2}
+          <br />
+          Candies: #{d.candies}
       
-  each d in data.doubles
-    div.inline.evolveReport(class="#{d.class}").
-      #{d.pokemonEvolvesStr2}
-      <br />
-      Candies: #{d.candies}

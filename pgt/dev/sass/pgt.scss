@@ -85,9 +85,26 @@ button {
 .single-evolve {
     background-color: #dfc;
 }
+.single-evolve-close {
+    background-color: #fec;
+}
 .double-evolve {
+    background-color: #fcd;
+}
+.multi-evolve {
     background-color: #cdf;
 }
 .error-evolve {
     background-color: red;
+}
+.evolveGroupLabel {
+    font-size: 120%;
+    font-weight: bold;
+}
+.evolveGroup {
+    border: 3px solid blue;
+    background-color: #ddd;
+    border-radius: 8px;
+    padding: 5px;
+    margin: 8px;
 }

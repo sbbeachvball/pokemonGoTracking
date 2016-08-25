@@ -8,8 +8,16 @@ var db = new sqlite3.Database('../data/pokemon.sqlite');
 ////////////////////////////////////////////////////////////////////////////////
 function evolveCrunch(d){
     d.pData = [];
+    d.gData = {};
+    d.gData.singles      = { min: 0, max: 0, cp: 0, desc: "Single evolves ready"   , data : [] };
+    d.gData.multi        = { min: 0, max: 0, cp: 0, desc: "Double evolves ready"    , data : [] };
+    d.gData.doubles      = { min: 0, max: 0, cp: 0, desc: "Single evolves ready, but double evolves to be considered", data : [] };
+    d.gData.singlesClose = { min: 0, max: 0, cp: 0, desc: "Single evolves within 25%"   , data : [] };
+    // these next three all host the same type of data, should probably set this
+    // up a bit differently (as I am trying to do above)
     d.singles = [];
     d.doubles = [];
+    d.multi = [];
     d.attached = "Attached New Data";
     // loop over the user candy data
     for(var i=0; i < d.userCandy.length; i++){
@@ -20,6 +28,8 @@ function evolveCrunch(d){
         n.pokemonEvolvesStr2 = '';
         n.class = '';
         n.maxEvLevel = 0;
+        n.maxEvCandy = 0;
+        n.multiEvolveAnOption = false;
         var evolveAnOption = false;
         for(var j=0; j < d.pokemon.length; j++){
             // check if this pokemon is in the right evolve chain
@@ -27,7 +37,10 @@ function evolveCrunch(d){
                 n.pokemonEvolves.push(d.pokemon[j].name);
                 
                 // get max evolution level (that should probably have been done in db
-                if( d.pokemon[j].evLevel > n.maxEvLevel) { n.maxEvLevel = d.pokemon[j].evLevel; }
+                if( d.pokemon[j].evLevel > n.maxEvLevel) { 
+                    n.maxEvLevel = d.pokemon[j].evLevel; 
+                    n.maxEvCandy += d.pokemon[j].evCandy;
+                }
                 
                 // this conditional builds the evolve string (end version)
                 if(d.pokemon[j].evCandy == 0){
@@ -41,13 +54,18 @@ function evolveCrunch(d){
                 }
                 
                 // this checks to see if any of the evolves are an option
-                if( d.pokemon[j].evCandy > 0 && n.candies > d.pokemon[j].evCandy ){
+                if( d.pokemon[j].evCandy > 0 && n.candies >= d.pokemon[j].evCandy ){
                     evolveAnOption = true;
+                    //console.log(d.pokemon[j].name+' MaxEvCandy: '+n.maxEvCandy);
                 }
             }
         }
         if ( ! evolveAnOption ) { valid = false; }
         if ( n.candies == 0 ){ valid = false; }
+        
+        if (n.candies >= n.maxEvCandy ){
+            n.multiEvolveAnOption = true;
+        }
         
         /// the string is no longer used, but we still need this conditional as a check
         if ( n.maxEvLevel == 0){
@@ -55,11 +73,34 @@ function evolveCrunch(d){
         }
         else if( n.maxEvLevel == 1){
             n.class = 'single-evolve';
-            if ( valid) { d.singles.push(n); }
+            if ( valid ) { 
+                //d.singles.push(n); 
+                d.gData.singles.data.push(n);
+                
+                // add up the evolves
+                d.gData.singles.min += Math.floor(n.candies / n.maxEvCandy);
+                d.gData.singles.max += Math.floor(n.candies / n.maxEvCandy);
+                d.gData.singles.cp = d.gData.singles.max * 500;
+            }
+            else if ((n.candies / n.maxEvCandy) > 0.75 ){
+                n.class = 'single-evolve-close';
+                d.gData.singlesClose.data.push(n);
+            }
         }
         else if( n.maxEvLevel == 2){
             n.class = 'double-evolve';
-            if ( valid) { d.doubles.push(n); }
+            if ( n.multiEvolveAnOption && valid ) {
+                n.class = 'multi-evolve';
+                //d.multi.push(n);
+                d.gData.multi.data.push(n);
+                d.gData.multi.min += Math.floor(n.candies / n.maxEvCandy);
+                d.gData.multi.max += Math.floor(n.candies / n.maxEvCandy);
+                d.gData.multi.cp = d.gData.multi.max * 500;
+            }
+            else if ( valid ) { 
+                //d.doubles.push(n); 
+                d.gData.doubles.data.push(n);
+            }
         }
         else {
             n.class = 'error-evolve';
@@ -67,9 +108,10 @@ function evolveCrunch(d){
          
         
         // only push this onto the array if we are still valid
-        if (valid) {
-            d.pData.push(n);
-        }
+        // dont think we ever get here now...
+        //if (valid) {
+        //    d.pData.push(n);
+        //}
     }
     
     // evolve logic, single evolves, no problem, just 
