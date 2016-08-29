@@ -7,8 +7,9 @@ var db = new sqlite3.Database('../data/pokemon.sqlite');
 router.get('/:userId', function(req, res, next) {
     var userId = req.params.userId;
     //select pdex,name,userEvCandy as candy from pokemon left join userCandy on pdex = userEvBase where userId = 1 and pdex in ( select evBase from pokemon group by evBase );
+    // select name from pokemon where pdex in ( select evBase from pokemon where evLevel = 1) order by name;
     var query = 'select pdex as userPdex,name as userPname,userEvCandy as userCount,userId from pokemon left join userCandy on pdex = userEvBase ';
-    query += 'where userId = ? and pdex in ( select evBase from pokemon group by evBase ) order by userPname';
+    query += 'where userId = ? and pdex in ( select evBase from pokemon where evLevel = 1 ) order by userPname';
     try {
         db.all(query,[ userId ], function(err,rows) {
             // need to break the table into chunks
