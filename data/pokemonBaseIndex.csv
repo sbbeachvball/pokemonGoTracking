@@ -80,7 +80,7 @@
 80,1,Slowbro
 81,0,Magnemite
 82,1,Magneton
-83,2,Magnezone
+83,0,Farfetch'd
 84,0,Doduo
 85,1,Dodrio
 86,0,Seel
@@ -104,7 +104,7 @@
 104,0,Cubone
 105,1,Marowak
 106,0,Hitmonlee
-107,1,Hitmonchan
+107,0,Hitmonchan
 108,0,Lickitung
 109,0,Koffing
 110,1,Weezing
@@ -148,4 +148,4 @@
 148,1,Dragonair
 149,2,Dragonite
 150,0,Mewtwo
-151,1,Mew
+151,0,Mew

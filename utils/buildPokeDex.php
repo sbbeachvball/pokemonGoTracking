@@ -115,47 +115,89 @@ foreach($lines as $line){
     $allPokemon[] = $p;
 }
 
-// create database and some data
-if ( false ) $res = $dbh->query("drop table if exists pokemon;");
-$res = $dbh->query("create table if not exists pokemon (pdex int primary key not null, name text, evBase int, evFrom int, evLevel int, evCandy int);");
+$opts = getopt('',array("create-tables:","drop-tables:","load-tables:"));
 
-// users
-if ( INIT_TABLES )  $res = $dbh->query("drop table if exists user;");
-$res = $dbh->query("create table if not exists user (uid int primary key not null, username text);");
-//$res = $dbh->query("insert into user (user, username) VALUES (1,'aaron');");
-//$res = $dbh->query("insert into user (user, username) VALUES (2,'malia');");
 
-// userData
-// hmmmm, need to track whether a user has a specific evolution to make calculations
-if ( INIT_TABLES ) $res = $dbh->query("drop table if exists userCandy;");  // will want to comment this out once in use
-$res = $dbh->query("create table if not exists userCandy (rowid integer primary key autoincrement, userId int, userEvBase int, userEvCandy int);");
+$td = array();
+$td['drop-tables'] = array();
+$td['create-tables'] = array();
 
-if ( INIT_TABLES ) $res = $dbh->query("drop table if exists userHas;");  // will want to comment this out once in use
-$res = $dbh->query("create table if not exists userHas (rowid integer primary key autoincrement, userId int, userPdex int, userCount int);");
-//print_r($res);
+function tableDef($key,$table,$def){
+    global $td;
+    $td['drop-tables'][$key] = 'drop table if exists ' . $table . ';';
+    $td['create-tables'][$key] = 'create table if not exists ' . $table . ' ' . $def . ";";
+}
 
-// build pokedex based data
-$ins = $dbh->prepare("insert into pokemon ( pdex,name,evBase,evFrom,evLevel,evCandy) VALUES (:pdex,:name,:evBase,:evFrom,:evLevel,:evCandy);");
-foreach( $allPokemon as &$p){
-    $p->calcCandy($evNumTracking[$p->evBase]);
-    if (! $ins->execute($p->dbPrep())){
-        print "Error on inserting into db\n";
+tableDef('user'   ,'user'     ,'(uid int primary key not null, username text)');
+tableDef('candy'  ,'userCandy','(rowid integer primary key autoincrement, userId int, userEvBase int, userEvCandy int)');
+tableDef('has'    ,'userHas'  ,'(rowid integer primary key autoincrement, userId int, userPdex int, userCount int)');
+tableDef('pokemon','pokemon'  ,'(pdex int primary key not null, name text, evBase int, evFrom int, evLevel int, evCandy int)');
+
+//print var_dump($opts);
+
+// print var_dump($td);
+
+if( isset($opts['drop-tables'])){
+    $tables = explode(",",$opts['drop-tables']);
+    foreach($tables as $tableKey){
+        print "drop key: " . $tableKey . "\n";
+        if ( isset($td['drop-tables'][$tableKey])){
+            print "sql: " . $td['drop-tables'][$tableKey] . "\n";
+            $res  = $dbh->query($td['drop-tables'][$tableKey]);
+        }
+    }
+}
+if( isset($opts['create-tables'])){
+    $tables = explode(",",$opts['create-tables']);
+    foreach($tables as $tableKey){
+        print "create key: " . $tableKey . "\n";
+        if ( isset($td['create-tables'][$tableKey])){
+            print "sql: " . $td['create-tables'][$tableKey] . "\n";
+            $res  = $dbh->query($td['create-tables'][$tableKey]);
+        }
     }
 }
 
-/////// Set up some initial fake userdata
-/////foreach( $allPokemon as &$p){
-/////    $userHas = rand(0,4);
-/////    // this first command should have skipped non evBase ids - clean up that issue with the following line
-/////    // delete from userCandy where userEvBase not in ( select distinct(evBase) from pokemon);
-/////    $res = $dbh->query("insert into userHas (userId,userPdex,userCount) VALUES (1,". $p->index . ",$userHas);");
-/////    
-/////    // this should NOT be done for every userCandy, this should only be done for entries that are evLevel 0
-/////    if ( $p->evLevel == 0 ){
-/////        $candyCount = rand(1,40);
-/////        $res = $dbh->query("insert into userCandy (userId,userEvBase,userEvCandy) VALUES (1,". $p->index . ",$candyCount);");
-/////    }
-/////}
+/////////// create database and some data
+/////////if ( false ) $res = $dbh->query("drop table if exists pokemon;");
+/////////$res = $dbh->query("create table if not exists pokemon (pdex int primary key not null, name text, evBase int, evFrom int, evLevel int, evCandy int);");
+/////////
+/////////// users
+/////////if ( INIT_TABLES )  $res = $dbh->query("drop table if exists user;");
+/////////$res = $dbh->query("create table if not exists user (uid int primary key not null, username text);");
+///////////$res = $dbh->query("insert into user (user, username) VALUES (1,'aaron');");
+///////////$res = $dbh->query("insert into user (user, username) VALUES (2,'malia');");
+/////////
+/////////// userData
+/////////// hmmmm, need to track whether a user has a specific evolution to make calculations
+/////////if ( INIT_TABLES ) $res = $dbh->query("drop table if exists userCandy;");  // will want to comment this out once in use
+/////////$res = $dbh->query("create table if not exists userCandy (rowid integer primary key autoincrement, userId int, userEvBase int, userEvCandy int);");
+/////////
+/////////if ( INIT_TABLES ) $res = $dbh->query("drop table if exists userHas;");  // will want to comment this out once in use
+/////////$res = $dbh->query("create table if not exists userHas (rowid integer primary key autoincrement, userId int, userPdex int, userCount int);");
+///////////print_r($res);
+/////////
+
+if( isset($opts['load-tables'])){
+    $tables = explode(",",$opts['load-tables']);
+    foreach($tables as $tableKey){
+        //######### pokemon
+        if( $tableKey == 'pokemon' ){
+            // build pokedex based data
+            $ins = $dbh->prepare("insert or replace into pokemon ( pdex,name,evBase,evFrom,evLevel,evCandy) VALUES (:pdex,:name,:evBase,:evFrom,:evLevel,:evCandy);");
+            foreach( $allPokemon as &$p){
+                $p->calcCandy($evNumTracking[$p->evBase]);
+                if (! $ins->execute($p->dbPrep())){
+                    print "Error on inserting into db\n";
+                }
+            }
+        }
+        //######### user
+        if( $tableKey == 'user' ){
+        }
+    }
+}
+
 
 // this query is close to getting the data I need from the db...
 // could do some joins on the data as well.... to get the ev1 and ev2 data???
