@@ -108,3 +108,27 @@ button {
     padding: 5px;
     margin: 8px;
 }
+.userButton {
+    padding: 10px;
+    margin: 5px;
+    font-size: 80%;
+    font-weight: bold;
+}
+.r {
+    background-color: red;
+}
+.g {
+    background-color: #4f4;
+}
+.userBlock {
+    font-size: 150%;
+    font-weight: bold;
+    display: block;
+    border: 3px solid blue;
+    background-color: #ddd;
+    border-radius: 8px;
+    padding: 5px;
+    margin: 8px;
+    width: 720px;
+    
+}

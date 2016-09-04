@@ -6,19 +6,30 @@ block content
     OK, we are here at the main page.  The counts and candy links allow the user to adjust the numbers
     in the db.
   p.
-    The evolve reports still need to be created.  Need to sort out the 
+    The evolve reports should still be refined.  Need to sort out the 
     logic for maximizing XP (# of evolves) or maximizing CP (getting higher evolved pokemon).
+    
   p.
-    This should be modified to actually loop over the users
-  ul                                                                
-    each row in rows
-      li #{row.username} (#{row.uid})
-        ul
-          li #[a(href="counts/#{row.uid}") Pokemon Counts]
-          li #[a(href="candy/#{row.uid}") Pokemon Candy]
-          li #[a(href="evolve/#{row.uid}") Pokemon Evolve Report]
-          li #[a(href="delUser/#{row.uid}") Delete User]
-          //li #[a(href="evolve_cp/#{row.uid}") Pokemon Evolve Report (maximize CP)]
+    Please note that currently there is no confirm on the delete.  
+    Also, the delete doesn't currently delete data from the userCandy or userHas database 
+    table.
+    
+  each row in rows
+    div.userBlock #{row.username} (id: #{row.uid})
+      form
+        button.userButton.g(formaction="candy/#{row.uid}") Pokemon Candy Form
+        button.userButton.g(formaction="evolve/#{row.uid}") Pokemon Evolve Report
+        button.userButton.r(formaction="delUser/#{row.uid}") Delete User #{row.username}
+
+  //ul                                                                
+  //  each row in rows
+  //    li #{row.username} (#{row.uid})
+  //      ul
+  //        li #[a(href="counts/#{row.uid}") Pokemon Counts]
+  //        li #[a(href="candy/#{row.uid}") Pokemon Candy]
+  //        li #[a(href="evolve/#{row.uid}") Pokemon Evolve Report]
+  //        li #[a(href="delUser/#{row.uid}") Delete User]
+  //        //li #[a(href="evolve_cp/#{row.uid}") Pokemon Evolve Report (maximize CP)]
   
 
   form(action="/newUser",method="get",enctype="multipart/form-data")
