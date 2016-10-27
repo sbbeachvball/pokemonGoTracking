@@ -146,6 +146,9 @@ function buildTableWithDesc($k,$v,$cols){
 // a(r)sort works perfectly for this simple data, if we have first and second
 // evolution data, not clear how we will do it...  how to key that some number
 // of the evolves are second level evolves??????
+
+// maybe deal with objects and then create an array that duplicates the original
+// data structure that can then reference an associative array of the objects.
 arsort($data);
 
 // generate the html
