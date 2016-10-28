@@ -99,7 +99,7 @@ function evolveCrunch(d){
                 // to do this right we would need to do a lookup
                 pdex = d.userCandy[i].userEvBase -1;
                 pokename = d.pokemon[pdex].name;
-                d.csv.singles += pokename + ',' + n.candies + ',' + Math.floor(n.candies / n.maxEvCandy) + ',0\n';
+                d.csv.singles += pokename + ',' + n.class + ',' + n.candies + ',' + Math.floor(n.candies / n.maxEvCandy) + ',0\n';
             }
             else if ((n.candies / n.maxEvCandy) > 0.75 ){
                 n.class = 'single-evolve-close';
@@ -121,8 +121,8 @@ function evolveCrunch(d){
                 // this is a total hack, because I am relying on the evBase being 1 below
                 basepdex = d.pokemon[pdex].evBase - 1;
                 pokename = d.pokemon[basepdex].name;
-                d.csv.doubles += pokename + ',' + n.candies + ',1,' + Math.floor(n.candies / n.maxEvCandy) + '\n';
-                d.csv.doubleo += pokename + ',' + n.candies + ',' + Math.floor(n.candies / n.ev1Candy) + ',0\n';
+                d.csv.doubles += pokename + ',' + n.class + ',' + n.candies + ',1,' + Math.floor(n.candies / n.maxEvCandy) + '\n';
+                d.csv.doubleo += pokename + ',' + n.class + ',' + n.candies + ',' + Math.floor(n.candies / n.ev1Candy) + ',0\n';
                 //console.log({ 'pdex' : pdex, 'basepdex' : basepdex } );
             }
             else if ( valid ) { 
@@ -134,7 +134,7 @@ function evolveCrunch(d){
                 // this is a total hack, because I am relying on the evBase being 1 below
                 basepdex = d.pokemon[pdex].evBase - 1;
                 pokename = d.pokemon[basepdex].name;
-                d.csv.doubleo += pokename + ',' + n.candies + ',' + Math.floor(n.candies / n.ev1Candy) + ',0\n';
+                d.csv.doubleo += pokename + ',' + n.class + ',' + n.candies + ',' + Math.floor(n.candies / n.ev1Candy) + ',0\n';
                 
                 //nevolves = Math.floor(n.candies / n.maxEvCandy);
             }

@@ -3,9 +3,10 @@ define('NL',"\n");
 define('FILE_IN',"./data.csv");
 
 // define column indexes for the CSV data file
-define('CND',1);
-define('L1',2);
-define('L2',3);
+define('EVC',1);
+define('CND',2);
+define('L1',3);
+define('L2',4);
 
 // 16 works well for portrait, 10 or 12 for landscape
 //define('ENTRIES_PER_CONTAINER',16);
@@ -193,6 +194,7 @@ $html = '<div class="container conWide">';
 $cntr = 0;
 $entriesPerContainer = ENTRIES_PER_CONTAINER;
 foreach($keySort as $pokemonName => $v){
+    $evclass = $GLOBALS['objects'][$pokemonName][EVC];
     $candies = $GLOBALS['objects'][$pokemonName][CND];
     $v1      = $GLOBALS['objects'][$pokemonName][L1];
     $v2      = $GLOBALS['objects'][$pokemonName][L2];
