@@ -2,6 +2,9 @@ all: help
 
 clean:
 	(cd ..; find . -type f -name '*~' -exec rm {} \;)
+
+run:
+	(cd ../pgt; npm start)
 	
 init:
 	(cd ../utils; rm ../data/pokemon.sqlite; ./buildPokeDex.php --drop-tables=pokemon,user,candy,has --create-tables=pokemon,user,candy,has --load-tables=pokemon)
@@ -17,6 +20,7 @@ backup:
 	
 help:
 	@echo "Help system for pokemon evolve tracking system"
+	@echo "make run      - runs the node app"
 	@echo "make init     - runs a script that builds out a database from a template"
 	@echo "                should not be run once using the system."
 	@echo "make clean-db - runs a script that rebuilds the pokemon db (to fix bad input data)"

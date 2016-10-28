@@ -15,11 +15,15 @@ function evolveCrunch(d){
     d.gData.singlesClose = { min: 0, max: 0, cp: 0, desc: "Single evolves within 25%"   , data : [] };
     // these next three all host the same type of data, should probably set this
     // up a bit differently (as I am trying to do above)
+    d.csv = {};
+    d.csv.singles = '';
+    d.csv.doubles = '';
+    d.csv.doubleo = '';
     d.singles = [];
     d.doubles = [];
     d.multi = [];
     d.attached = "Attached New Data";
-    // loop over the user candy data
+    // loop over the user candy data (ie: each pokemon)
     for(var i=0; i < d.userCandy.length; i++){
         var valid = true;
         var n = {};
@@ -29,6 +33,7 @@ function evolveCrunch(d){
         n.class = '';
         n.maxEvLevel = 0;
         n.maxEvCandy = 0;
+        n.ev1Candy = 0;
         n.multiEvolveAnOption = false;
         var evolveAnOption = false;
         for(var j=0; j < d.pokemon.length; j++){
@@ -52,6 +57,9 @@ function evolveCrunch(d){
                     n.pokemonEvolvesStr2 += ' > ';
                     n.pokemonEvolvesStr2 += d.pokemon[j].name;
                 }
+                if ( d.pokemon[j].evLevel == 1 ){
+                    n.ev1Candy = d.pokemon[j].evCandy;
+                }
                 
                 // this checks to see if any of the evolves are an option
                 if( d.pokemon[j].evCandy > 0 && n.candies >= d.pokemon[j].evCandy ){
@@ -66,7 +74,7 @@ function evolveCrunch(d){
         if (n.candies >= n.maxEvCandy ){
             n.multiEvolveAnOption = true;
         }
-        
+
         /// the string is no longer used, but we still need this conditional as a check
         if ( n.maxEvLevel == 0){
             valid = false;
@@ -77,10 +85,21 @@ function evolveCrunch(d){
                 //d.singles.push(n); 
                 d.gData.singles.data.push(n);
                 
-                // add up the evolves
+                // add up the evolves to have a running total
+                // looks like min and max is the same, not sure how/why that was done
+                // or if there is a typo
                 d.gData.singles.min += Math.floor(n.candies / n.maxEvCandy);
                 d.gData.singles.max += Math.floor(n.candies / n.maxEvCandy);
                 d.gData.singles.cp = d.gData.singles.max * 500;
+                
+                // i is an index into userCandy d.userCandy[i] 
+                //pokename = 'pokemonName';
+                // sort this out for later use in the CSV data
+                // total hack relying on the face that the base is one below
+                // to do this right we would need to do a lookup
+                pdex = d.userCandy[i].userEvBase -1;
+                pokename = d.pokemon[pdex].name;
+                d.csv.singles += pokename + ',' + n.candies + ',' + Math.floor(n.candies / n.maxEvCandy) + ',0\n';
             }
             else if ((n.candies / n.maxEvCandy) > 0.75 ){
                 n.class = 'single-evolve-close';
@@ -96,10 +115,28 @@ function evolveCrunch(d){
                 d.gData.multi.min += Math.floor(n.candies / n.maxEvCandy);
                 d.gData.multi.max += Math.floor(n.candies / n.maxEvCandy);
                 d.gData.multi.cp = d.gData.multi.max * 500;
+
+                // sort this out for later use in the CSV data
+                pdex = d.userCandy[i].userEvBase;
+                // this is a total hack, because I am relying on the evBase being 1 below
+                basepdex = d.pokemon[pdex].evBase - 1;
+                pokename = d.pokemon[basepdex].name;
+                d.csv.doubles += pokename + ',' + n.candies + ',1,' + Math.floor(n.candies / n.maxEvCandy) + '\n';
+                d.csv.doubleo += pokename + ',' + n.candies + ',' + Math.floor(n.candies / n.ev1Candy) + ',0\n';
+                //console.log({ 'pdex' : pdex, 'basepdex' : basepdex } );
             }
             else if ( valid ) { 
                 //d.doubles.push(n); 
                 d.gData.doubles.data.push(n);
+                
+                // figure out the max number of first order evolves
+                pdex = d.userCandy[i].userEvBase;
+                // this is a total hack, because I am relying on the evBase being 1 below
+                basepdex = d.pokemon[pdex].evBase - 1;
+                pokename = d.pokemon[basepdex].name;
+                d.csv.doubleo += pokename + ',' + n.candies + ',' + Math.floor(n.candies / n.ev1Candy) + ',0\n';
+                
+                //nevolves = Math.floor(n.candies / n.maxEvCandy);
             }
         }
         else {
@@ -141,7 +178,7 @@ router.get('/:userId', function(req, res, next) {
                         db.all(query,[uid], function(err,rows){
                             globalData.userHas = rows;
                             evolveCrunch(globalData);
-                            //console.log(globalData);
+                            console.log(globalData);
                             res.render('evolve', { title: 'Pokemon GO Evolve Report', data: globalData });
                         });
                     } catch(exception){
