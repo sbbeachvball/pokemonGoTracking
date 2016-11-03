@@ -160,6 +160,24 @@ function evolveCrunch(d){
     //console.log(d);
 }
 ////////////////////////////////////////////////////////////////////////////////
+function outputDataFile(d){
+    var fs = require('fs');
+    var csv = '';
+    csv += '# single evolves - straightforward\n';
+    csv += d.csv.singles;
+    csv += '# double evolves - optional\n';
+    csv += d.csv.doubles;
+    csv += '# possible double evolves - \n';
+    csv += d.csv.doubleo;
+    fs.writeFile('../poc/data.csv',csv,function(err){
+      if(err) {
+        return console.log(err);
+    }
+
+    console.log("The file was saved!");
+    });
+}
+////////////////////////////////////////////////////////////////////////////////
 globalData = {};
 /* GET home page. */
 router.get('/:userId', function(req, res, next) {
@@ -179,6 +197,7 @@ router.get('/:userId', function(req, res, next) {
                             globalData.userHas = rows;
                             evolveCrunch(globalData);
                             console.log(globalData);
+                            outputDataFile(globalData);
                             res.render('evolve', { title: 'Pokemon GO Evolve Report', data: globalData });
                         });
                     } catch(exception){

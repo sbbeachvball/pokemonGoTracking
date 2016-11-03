@@ -1,6 +1,7 @@
 <?php
 define('NL',"\n");
 define('FILE_IN',"./data.csv");
+define('DEBUG',false);
 
 // define column indexes for the CSV data file
 define('EVC',1);
@@ -103,6 +104,15 @@ p {
     */
     margin: auto;
 }
+.single-evolve {
+    color: #4f4;
+}
+.multi-evolve {
+    color: #f44;
+}
+.double-evolve {
+    color: #44f;
+}
 
 </style>
 </head>
@@ -113,17 +123,24 @@ p {
 <?php
 
 $GLOBALS['objects'] = array();
-
+////////////////////////////////////////////////////////////////////////////////
+function dprint($toPrint){
+    if ( DEBUG ) {
+        print "$toPrint";
+    }
+}
 ////////////////////////////////////////////////////////////////////////////////
 // input file is a csv of pokemon,1stLevelEvolves,2ndLevelEvolves
 ////////////////////////////////////////////////////////////////////////////////
 function readInputFile($file){
     $lines = file($file);
     foreach($lines as $line){
+        if ( $line[0] == "#" ) { dprint("comment<br />"); continue; }
+        if ( $line[0] == "\n" ) { dprint("blank<br />") ; continue; }
         $records = explode(",",trim($line));
         $key = $records[0];
         if( isset($GLOBALS['objects'][$key])){
-            print "duplicated key: $key\n";
+            dprint("duplicated key: $key<br />\n");
         }
         $GLOBALS['objects'][$key] = $records;
         
@@ -131,13 +148,13 @@ function readInputFile($file){
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-function mimicTable($k,$entryNum,$candies,$v1,$v2,$cols){
+function mimicTable($k,$entryNum,$evclass,$candies,$v1,$v2,$cols){
     $v = $v1 + $v2;
     $nl = "\n";
     $b = '';
     if ( $entryNum ) $b .= '<hr>';
     $b .= '<div class="table">' . NL;
-    $b .= '<div class="caption">' . $k . ' (' . $candies . ')</div>' . NL;
+    $b .= '<div class="caption"><span class="' . $evclass . '">' . $k . ' (' . $candies . ')</span></div>' . NL;
     
     for($i=0; $i < $v ; $i++){
         $clstr = ( $i < $v1 ) ? "ev1" : "ev2";
@@ -204,7 +221,7 @@ foreach($keySort as $pokemonName => $v){
         $html .= "</div>\n<div class=\"container conNarrow\">\n";
     }
     
-    $html .= mimicTable($pokemonName,$entryMod,$candies,$v1,$v2,10);
+    $html .= mimicTable($pokemonName,$entryMod,$evclass,$candies,$v1,$v2,10);
     // the last argument for mimicTable was originally expected to be
     // different for each call (0,5,10)
     ////if ( $v <= 5 ){
