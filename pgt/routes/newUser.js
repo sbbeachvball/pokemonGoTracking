@@ -1,9 +1,3 @@
-
-
-
-
-
-
 var express = require('express');
 var router = express.Router();
 var sqlite3 = require('sqlite3').verbose();
@@ -34,7 +28,7 @@ router.get('/', function(req, res, next) {
                         console.log('results: '+rows.length);
                         for(var i = 0; i < rows.length; i++){
                             db.run('insert into userHas (userId, userPdex, userCount) values (?,?,?)',[ newuid, rows[i].pdex, 0 ]);
-                            if ( rows[i].evLevel == 0 ){
+                            if ( rows[i].evLevel == 0 || rows[i].evLevel == -1 ){
                                 db.run('insert into userCandy (userId, userEvBase, userEvCandy) values (?,?,?)',[ newuid, rows[i].pdex, 0]);
                             }
                         }
