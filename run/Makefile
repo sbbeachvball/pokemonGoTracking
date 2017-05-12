@@ -7,10 +7,10 @@ run:
 	(cd ../pgt; npm start)
 	
 init:
-	(cd ../utils; rm ../data/pokemon.sqlite; ./buildPokeDex.php --drop-tables=pokemon,user,candy,has --create-tables=pokemon,user,candy,has --load-tables=pokemon)
+	(cd ../utils; rm ../data/pokemon.sqlite; ./buildPokeDex.php --drop-tables=pokemon,user,candy,has --create-tables=pokemon,user,candy,has --load-tables=pokemon; chmod 666 ../data/pokemon.sqlite)
 
 clean-db:
-	(cd ../utils; rm ../data/pokemon.sqlite; ./buildPokeDex.php --drop-tables=pokemon --create-tables=pokemon --load-tables=pokemon)
+	(cd ../utils; rm ../data/pokemon.sqlite; ./buildPokeDex.php --drop-tables=pokemon --create-tables=pokemon --load-tables=pokemon; chmod 666 ../data/pokemon.sqlite)
 
 bk:
 	backup
