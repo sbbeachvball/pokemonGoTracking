@@ -12,6 +12,9 @@ init:
 clean-db:
 	(cd ../utils; rm ../data/pokemon.sqlite; ./buildPokeDex.php --drop-tables=pokemon --create-tables=pokemon --load-tables=pokemon; chmod 666 ../data/pokemon.sqlite)
 
+update-db:
+	(cd ../utils; ./buildPokeDex.php --drop-tables=pokemon --create-tables=pokemon --load-tables=pokemon)
+
 bk:
 	backup
     

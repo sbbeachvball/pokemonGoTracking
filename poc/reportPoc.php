@@ -11,8 +11,13 @@ define('L2',4);
 
 // 16 works well for portrait, 10 or 12 for landscape
 //define('ENTRIES_PER_CONTAINER',16);
-define('ENTRIES_PER_CONTAINER',10);
+//define('ENTRIES_PER_CONTAINER',14);
+//define('COLUMNS_PER_ROW',7);
 
+define('ENTRIES_PER_CONTAINER',18);
+// there is a css change required to change this at this time, maybe move that into this code
+define('COLUMNS_PER_ROW',7);  
+define('CONTAINER_WIDTH',((COLUMNS_PER_ROW * 17) + 14));
 ?>
 <!DOCTYPE html>
 <html>
@@ -22,12 +27,22 @@ define('ENTRIES_PER_CONTAINER',10);
 body {
     font-family: helvetica, arial, san-serif;
     font-size: 80%;
+    margin-top: 40px;  /* control the top padding so it fits better on a clipboard :-) */
 }
 table {
-    border: none;
+    border: 1px solid black;
+    border-collapse: collapse;
 }
-td {
-    border: none;
+td{
+    border: 1px solid black;
+}
+.doc {
+    width: 330px;
+}
+.label {
+    padding: 4px;
+    font-weight: bold;
+    font-size: 125%;
 }
 tr {
 }
@@ -74,11 +89,15 @@ caption {
     display: inline-block;
     vertical-align: top;
 }
+/* ~ 20px per box...  maybe 18*numperrow + 14 */
 .conWide {
-    width: 180px;
+    width: 191px;
 }
 .conNarrow {
     width: 140px;
+}
+.conWidth {
+    width: <?php print CONTAINER_WIDTH ?>px;
 }
 div.table {
 }
@@ -104,6 +123,10 @@ p {
     */
     margin: auto;
 }
+p.banner-top {
+    font-size: 200%;
+    font-weight: bold;
+}
 .single-evolve {
     color: #4f4;
 }
@@ -118,10 +141,14 @@ p {
 </head>
 <body>
 <header>
+<p class="banner-top">
+Report Produced on <?php print date('Y-m-d'); ?>
+</p>
 </header>
 <div class="content">
-<?php
 
+<?php
+$html = '';
 $GLOBALS['objects'] = array();
 ////////////////////////////////////////////////////////////////////////////////
 function dprint($toPrint){
@@ -143,8 +170,6 @@ function readInputFile($file){
             dprint("duplicated key: $key<br />\n");
         }
         $GLOBALS['objects'][$key] = $records;
-        
-        //$GLOBALS['data'][$key] = $records[1];
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -201,16 +226,26 @@ foreach($GLOBALS['objects'] as $k => $a){
     $totalEvolves += $a[L1] + $a[L2];
 }
 
+// if we want to sort by number of evolves we need to do this
 //print_pre($keySort,"keysort");
 
-arsort($keySort);
+// gather keys from the keySort array
+$order = array_keys($keySort);
+
+// if we want to sort by pokemon, just sort the order array, otherwise will be
+// grouped by type (single evolve, double evolve)...
+sort($order);
+
+// can just comment out this sort to keep the types grouped
+//arsort($keySort);
 
 // generate the html
 $html = '';
-$html = '<div class="container conWide">';
+$html = '<div class="container conWidth">';
 $cntr = 0;
 $entriesPerContainer = ENTRIES_PER_CONTAINER;
-foreach($keySort as $pokemonName => $v){
+//foreach($keySort as $pokemonName => $pokemonNumEvolves){
+foreach( $order as $pokemonName){
     $evclass = $GLOBALS['objects'][$pokemonName][EVC];
     $candies = $GLOBALS['objects'][$pokemonName][CND];
     $v1      = $GLOBALS['objects'][$pokemonName][L1];
@@ -218,10 +253,10 @@ foreach($keySort as $pokemonName => $v){
     
     $entryMod = ( $cntr % $entriesPerContainer ); 
     if( $cntr && ! $entryMod ){
-        $html .= "</div>\n<div class=\"container conNarrow\">\n";
+        $html .= "</div>\n<div class=\"container conWidth\">\n";
     }
     
-    $html .= mimicTable($pokemonName,$entryMod,$evclass,$candies,$v1,$v2,10);
+    $html .= mimicTable($pokemonName,$entryMod,$evclass,$candies,$v1,$v2,COLUMNS_PER_ROW);
     // the last argument for mimicTable was originally expected to be
     // different for each call (0,5,10)
     ////if ( $v <= 5 ){
@@ -241,6 +276,27 @@ print $html;
 ?>
 </div>
 <footer>
+<table class="doc">
+<tr>
+<th>&nbsp;</th>
+<th>Begin</th>
+<th>End</th>
+</tr>
+
+<tr>
+<td class="label">XP</td>
+<td class="doc"></td>
+<td class="doc"></td>
+</tr>
+
+<tr>
+<td class="label">Time</td>
+<td class="doc"></td>
+<td class="doc"></td>
+</tr>
+
+
+</table>
 </footer>
 </body>
 </html>
