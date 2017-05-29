@@ -14,9 +14,22 @@ define('L2',4);
 //define('ENTRIES_PER_CONTAINER',14);
 //define('COLUMNS_PER_ROW',7);
 
-define('ENTRIES_PER_CONTAINER',18);
+// should consider making these form entries
+if (isset($_GET['epd'])){
+    define('ENTRIES_PER_CONTAINER',$_GET['epd']);
+}
+else {
+    define('ENTRIES_PER_CONTAINER',12);
+}
+
+if (isset($_GET['cpr'])){
+    define('COLUMNS_PER_ROW',$_GET['cpr']);
+}
+else {
+    define('COLUMNS_PER_ROW',7);
+}
 // there is a css change required to change this at this time, maybe move that into this code
-define('COLUMNS_PER_ROW',7);  
+//define('COLUMNS_PER_ROW',7);
 define('CONTAINER_WIDTH',((COLUMNS_PER_ROW * 17) + 14));
 ?>
 <!DOCTYPE html>
@@ -37,7 +50,7 @@ td{
     border: 1px solid black;
 }
 .doc {
-    width: 330px;
+    width: 500px;
 }
 .label {
     padding: 4px;
@@ -77,7 +90,7 @@ caption {
     text-align: center;
     color: #aaa;
     font-size: 100%;
-    /* 
+    /*
     background-color: #ccf;
     */
 }
@@ -138,6 +151,18 @@ p.banner-top {
 }
 
 </style>
+<!--
+<script>
+function validateForm() {
+    var cpr = document.forms["controls"]["cpr"].value;
+    var epd = document.forms["controls"]["epd"].value;
+    if (cpr == "") {
+        alert("Name must be filled out");
+        return false;
+    }
+}
+-->
+</script>
 </head>
 <body>
 <header>
@@ -180,7 +205,7 @@ function mimicTable($k,$entryNum,$evclass,$candies,$v1,$v2,$cols){
     if ( $entryNum ) $b .= '<hr>';
     $b .= '<div class="table">' . NL;
     $b .= '<div class="caption"><span class="' . $evclass . '">' . $k . ' (' . $candies . ')</span></div>' . NL;
-    
+
     for($i=0; $i < $v ; $i++){
         $clstr = ( $i < $v1 ) ? "ev1" : "ev2";
         $cv = $i + 1;
@@ -250,12 +275,12 @@ foreach( $order as $pokemonName){
     $candies = $GLOBALS['objects'][$pokemonName][CND];
     $v1      = $GLOBALS['objects'][$pokemonName][L1];
     $v2      = $GLOBALS['objects'][$pokemonName][L2];
-    
-    $entryMod = ( $cntr % $entriesPerContainer ); 
+
+    $entryMod = ( $cntr % $entriesPerContainer );
     if( $cntr && ! $entryMod ){
         $html .= "</div>\n<div class=\"container conWidth\">\n";
     }
-    
+
     $html .= mimicTable($pokemonName,$entryMod,$evclass,$candies,$v1,$v2,COLUMNS_PER_ROW);
     // the last argument for mimicTable was originally expected to be
     // different for each call (0,5,10)
@@ -268,7 +293,7 @@ foreach( $order as $pokemonName){
     ////else {
     ////    $html .= mimicTable($pokemonName,$entryMod,$candies,$v1,$v2,10);
     ////}
-    
+
     $cntr++;
 }
 $html .= '<br/>TotalEvolves: ' . $totalEvolves . '</div>' . NL;
@@ -281,18 +306,47 @@ print $html;
 <th>&nbsp;</th>
 <th>Begin</th>
 <th>End</th>
+<th>Controls</th>
+<th>&nbsp;</th>
 </tr>
 
 <tr>
 <td class="label">XP</td>
 <td class="doc"></td>
 <td class="doc"></td>
+<td class="doc">Colmns Per Row</td>
+<td class="doc">Entries Per Div</td>
 </tr>
 
 <tr>
 <td class="label">Time</td>
 <td class="doc"></td>
 <td class="doc"></td>
+<?php
+    // should build these with php
+?>
+<td class="doc">
+    <form name="controls" onsubmit="return validateForm()">
+        <select name="cpr" onchange="this.form.submit()">
+            <?php
+                foreach(range(6,10) as $cprval){
+                    print "<!-- " . $cprval . " vs. " . COLUMNS_PER_ROW . " -->\n";
+                    $selected = ( $cprval == COLUMNS_PER_ROW ) ? "selected" : "" ;
+                    print "<option $selected>$cprval</option>\n";
+                }
+            ?>
+        </select>
+</td>
+<td class="doc">
+        <select name="epd" onchange="this.form.submit()">
+            <?php
+            foreach(range(10,18) as $epdval){
+                $selected = ( $epdval == ENTRIES_PER_CONTAINER ) ? "selected" : "" ;
+                print "<option $selected>$epdval</option>\n";
+            }
+            ?>
+        </select>
+    </form></td>
 </tr>
 
 
